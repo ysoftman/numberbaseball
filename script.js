@@ -27,6 +27,8 @@ const elements = {
   revealButton: document.querySelector("#revealButton"),
   themeToggle: document.querySelector("#themeToggle"),
   themeIcon: document.querySelector("#themeToggle .theme-icon"),
+  buildVersion: document.querySelector("#buildVersion"),
+  buildTime: document.querySelector("#buildTime"),
   segments: [...document.querySelectorAll(".segment")],
 };
 
@@ -109,6 +111,24 @@ function formatResult(result) {
   return parts.join(" ");
 }
 
+function formatResultBadges(result) {
+  if (result.strikes === 0 && result.balls === 0) {
+    return `<span class="history-badge is-out">OUT</span>`;
+  }
+
+  const badges = [];
+  if (result.strikes > 0) {
+    badges.push(
+      `<span class="history-badge is-strike">${result.strikes}S</span>`,
+    );
+  }
+  if (result.balls > 0) {
+    badges.push(`<span class="history-badge is-ball">${result.balls}B</span>`);
+  }
+
+  return badges.join("");
+}
+
 function setStatus(message, tone = "normal") {
   elements.statusText.textContent = message;
   elements.statusText.classList.toggle("is-error", tone === "error");
@@ -160,12 +180,11 @@ function renderHistory() {
 
   state.guesses.forEach((entry, index) => {
     const item = document.createElement("li");
-    const isOut = entry.result.strikes === 0 && entry.result.balls === 0;
     item.className = "history-item";
     item.innerHTML = `
       <span class="history-number">${index + 1}</span>
       <span class="history-guess">${entry.guess.join("")}</span>
-      <span class="history-result ${isOut ? "is-out" : ""}">${formatResult(entry.result)}</span>
+      <span class="history-result">${formatResultBadges(entry.result)}</span>
     `;
     elements.historyList.prepend(item);
   });
@@ -197,7 +216,7 @@ function renderControls() {
 
   elements.submitButton.disabled = !canSubmit;
   elements.deleteButton.disabled = !canDelete;
-  elements.revealButton.disabled = !state.isGameOver;
+  elements.revealButton.disabled = false;
 }
 
 function renderInput() {
@@ -320,6 +339,13 @@ function submitGuess() {
 
 function revealAnswer() {
   if (!state.isGameOver) {
+    const confirmed = window.confirm(
+      "정답을 보면 이번 게임은 종료됩니다. 계속할까요?",
+    );
+    if (!confirmed) {
+      return;
+    }
+    endGame(false);
     return;
   }
 
@@ -417,5 +443,38 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+function isTokenLiteral(value) {
+  return !value || value.startsWith("__");
+}
+
+function renderBuildInfo() {
+  const versionAttr = elements.buildVersion.dataset.buildVersion;
+  elements.buildVersion.textContent = isTokenLiteral(versionAttr)
+    ? "local"
+    : versionAttr;
+
+  const timeAttr = elements.buildTime.dataset.buildTime;
+  const source = isTokenLiteral(timeAttr) ? document.lastModified : timeAttr;
+  const date = new Date(source);
+
+  if (Number.isNaN(date.getTime())) {
+    elements.buildTime.textContent = "알 수 없음";
+    elements.buildTime.removeAttribute("datetime");
+    return;
+  }
+
+  elements.buildTime.textContent = `${new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Seoul",
+  }).format(date)} KST`;
+  elements.buildTime.dateTime = date.toISOString();
+}
+
 renderThemeToggle();
+renderBuildInfo();
 startGame();

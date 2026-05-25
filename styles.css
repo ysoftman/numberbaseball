@@ -10,6 +10,8 @@
   --green-dark: #176f45;
   --field-grass: #19623a;
   --field-grass-dark: #0e4526;
+  --yellow: #d6a51d;
+  --yellow-dark: #a37a10;
   --red: #b63b35;
   --cream: #f9f4e7;
   --shadow: 0 18px 48px rgb(23 48 34 / 12%);
@@ -106,28 +108,33 @@ a {
 }
 
 .topbar {
-  align-items: flex-start;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2px;
 }
 
 .topbar-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
   gap: 8px;
 }
 
 .app-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .eyebrow {
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   color: var(--green-dark);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -138,9 +145,10 @@ p {
 }
 
 h1 {
-  font-size: clamp(2.15rem, 5vw, 4.35rem);
-  line-height: 0.95;
-  letter-spacing: 0;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 800;
 }
 
 h2 {
@@ -187,30 +195,30 @@ h2 {
 }
 
 .icon-button {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: grid;
   place-items: center;
-  font-size: 1.35rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .link-button {
-  min-height: 48px;
-  border-radius: 999px;
-  padding: 0 14px;
+  height: 40px;
+  border-radius: 10px;
+  padding: 0 12px;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  font-size: 0.9rem;
-  font-weight: 900;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .link-button span[aria-hidden="true"] {
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
@@ -258,7 +266,11 @@ dd {
   min-height: 220px;
   border-radius: 8px;
   overflow: hidden;
-  background: var(--field-grass);
+  background: linear-gradient(
+    135deg,
+    var(--field-grass),
+    var(--field-grass-dark)
+  );
 }
 
 .field-art {
@@ -266,14 +278,6 @@ dd {
   height: 100%;
   min-height: 220px;
   display: block;
-}
-
-.field-art .grass-start {
-  stop-color: var(--field-grass);
-}
-
-.field-art .grass-end {
-  stop-color: var(--field-grass-dark);
 }
 
 .result-callout {
@@ -440,6 +444,18 @@ dt {
   font-weight: 900;
 }
 
+.rule-strike {
+  color: var(--green);
+}
+
+.rule-ball {
+  color: var(--yellow-dark);
+}
+
+.rule-out {
+  color: var(--red);
+}
+
 dd {
   margin: 0;
 }
@@ -501,16 +517,31 @@ dd {
 }
 
 .history-result {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.history-badge {
   white-space: nowrap;
   border-radius: 999px;
-  padding: 6px 9px;
-  background: color-mix(in srgb, var(--green) 20%, transparent);
-  color: var(--green-dark);
+  padding: 4px 9px;
   font-size: 0.82rem;
   font-weight: 900;
 }
 
-.history-result.is-out {
+.history-badge.is-strike {
+  background: color-mix(in srgb, var(--green) 20%, transparent);
+  color: var(--green-dark);
+}
+
+.history-badge.is-ball {
+  background: color-mix(in srgb, var(--yellow) 28%, transparent);
+  color: var(--yellow-dark);
+}
+
+.history-badge.is-out {
   background: color-mix(in srgb, var(--red) 20%, transparent);
   color: var(--red);
 }
@@ -579,11 +610,12 @@ dd {
 
   .topbar {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .topbar-actions {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: space-between;
   }
 
   .app-links {
@@ -596,7 +628,7 @@ dd {
     justify-content: center;
     min-width: 0;
     padding: 0 8px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
   .score-strip {
@@ -657,6 +689,8 @@ dd {
     --green-dark: #7bd99e;
     --field-grass: #1a5b3a;
     --field-grass-dark: #0d3d24;
+    --yellow: #f1c14b;
+    --yellow-dark: #f7d77d;
     --red: #ef7b70;
     --cream: #fff2cf;
     --shadow: 0 18px 48px rgb(0 0 0 / 24%);
@@ -681,6 +715,8 @@ dd {
   --green-dark: #7bd99e;
   --field-grass: #1a5b3a;
   --field-grass-dark: #0d3d24;
+  --yellow: #f1c14b;
+  --yellow-dark: #f7d77d;
   --red: #ef7b70;
   --cream: #fff2cf;
   --shadow: 0 18px 48px rgb(0 0 0 / 24%);
