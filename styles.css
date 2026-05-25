@@ -241,33 +241,41 @@ h2 {
   left: 8px;
   z-index: 1;
   display: inline-flex;
-  gap: 10px;
-  padding: 6px 12px;
-  border: 1px solid rgb(255 255 255 / 24%);
-  border-radius: 999px;
-  background: rgb(23 32 26 / 78%);
+  gap: 14px;
+  padding: 8px 14px;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 12px;
+  background: rgb(23 32 26 / 55%);
   color: var(--cream);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .score-strip div {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
+  display: grid;
+  gap: 1px;
+  justify-items: start;
+  min-width: 0;
 }
 
 .score-strip div + div {
-  padding-left: 10px;
-  border-left: 1px solid rgb(255 255 255 / 18%);
+  padding-left: 14px;
+  border-left: 1px solid rgb(255 255 255 / 16%);
 }
 
 .score-strip span {
-  font-size: 0.68rem;
-  color: rgb(249 244 231 / 70%);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(249 244 231 / 62%);
 }
 
 .score-strip strong {
-  font-size: 0.92rem;
+  font-size: 1.05rem;
   font-weight: 900;
+  line-height: 1;
+  color: var(--cream);
 }
 
 .panel-heading span,
@@ -298,16 +306,21 @@ dd {
 
 .result-callout {
   position: absolute;
-  right: 18px;
-  bottom: 18px;
-  min-width: 190px;
-  padding: 14px 16px;
-  border: 1px solid rgb(255 255 255 / 42%);
-  border-radius: 8px;
-  background: rgb(23 32 26 / 82%);
+  top: 8px;
+  right: 8px;
+  min-width: 0;
+  max-width: calc(100% - 16px);
+  padding: 8px 14px;
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: 999px;
+  background: rgb(23 32 26 / 70%);
   color: var(--cream);
-  display: grid;
-  gap: 4px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .result-callout.is-win {
@@ -328,12 +341,13 @@ dd {
 }
 
 .result-callout span {
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   color: rgb(249 244 231 / 76%);
 }
 
 .result-callout strong {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 900;
 }
 
 .field-slots {
@@ -680,44 +694,32 @@ dd {
   }
 
   .score-strip {
-    gap: 6px;
-    padding: 4px 10px;
+    gap: 10px;
+    padding: 6px 10px;
   }
 
   .score-strip div + div {
-    padding-left: 6px;
+    padding-left: 10px;
   }
 
   .score-strip span {
-    font-size: 0.62rem;
+    font-size: 0.54rem;
   }
 
   .score-strip strong {
-    font-size: 0.85rem;
+    font-size: 0.92rem;
   }
 
   .result-callout {
-    top: 8px;
-    bottom: auto;
-    right: 8px;
-    left: auto;
-    transform: none;
-    min-width: 0;
-    max-width: calc(100% - 16px);
     padding: 6px 12px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 8px;
-    white-space: nowrap;
   }
 
   .result-callout span {
-    font-size: 0.7rem;
+    font-size: 0.66rem;
   }
 
   .result-callout strong {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   .keypad {
