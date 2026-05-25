@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>숫자 야구</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-board" aria-label="숫자 야구 게임">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">Number Baseball</p>
+            <h1>숫자 야구</h1>
+          </div>
+          <button
+            class="icon-button"
+            id="newGameButton"
+            type="button"
+            aria-label="새 게임"
+          >
+            <span aria-hidden="true">↻</span>
+          </button>
+        </div>
+
+        <div class="score-strip" aria-label="현재 게임 상태">
+          <div>
+            <span>시도</span>
+            <strong id="attemptCount">0</strong>
+          </div>
+          <div>
+            <span>남은 기회</span>
+            <strong id="remainingCount">10</strong>
+          </div>
+          <div>
+            <span>최고 기록</span>
+            <strong id="bestScore">-</strong>
+          </div>
+        </div>
+
+        <div class="field-panel" aria-hidden="true">
+          <svg class="field-art" viewBox="0 0 320 220" role="img">
+            <defs>
+              <linearGradient id="grass" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#1f8b54" />
+                <stop offset="100%" stop-color="#176f45" />
+              </linearGradient>
+            </defs>
+            <rect width="320" height="220" rx="18" fill="url(#grass)" />
+            <path d="M160 52 L248 132 L160 202 L72 132 Z" fill="#d6a75f" />
+            <path d="M160 74 L222 132 L160 181 L98 132 Z" fill="#237d4e" />
+            <g fill="#f9f4e7" stroke="#8e5c28" stroke-width="3">
+              <rect
+                x="151"
+                y="44"
+                width="18"
+                height="18"
+                transform="rotate(45 160 53)"
+              />
+              <rect
+                x="240"
+                y="124"
+                width="18"
+                height="18"
+                transform="rotate(45 249 133)"
+              />
+              <rect
+                x="151"
+                y="193"
+                width="18"
+                height="18"
+                transform="rotate(45 160 202)"
+              />
+              <rect
+                x="62"
+                y="124"
+                width="18"
+                height="18"
+                transform="rotate(45 71 133)"
+              />
+            </g>
+            <path
+              d="M72 132 Q160 18 248 132"
+              fill="none"
+              stroke="#f9f4e7"
+              stroke-width="4"
+              stroke-dasharray="8 10"
+              opacity="0.7"
+            />
+            <circle
+              cx="160"
+              cy="132"
+              r="16"
+              fill="#f9f4e7"
+              stroke="#b63b35"
+              stroke-width="3"
+            />
+            <path
+              d="M149 122 C155 132 155 141 149 148"
+              fill="none"
+              stroke="#b63b35"
+              stroke-width="2"
+            />
+            <path
+              d="M171 122 C165 132 165 141 171 148"
+              fill="none"
+              stroke="#b63b35"
+              stroke-width="2"
+            />
+          </svg>
+          <div class="result-callout" id="resultCallout">
+            <span>플레이 볼</span>
+            <strong>정답을 맞혀보세요</strong>
+          </div>
+        </div>
+
+        <div
+          class="digit-display"
+          id="digitDisplay"
+          aria-label="입력한 숫자"
+        ></div>
+
+        <p class="status-text" id="statusText" role="status" aria-live="polite">
+          서로 다른 숫자를 입력하세요.
+        </p>
+
+        <div class="keypad" id="keypad" aria-label="숫자 키패드"></div>
+
+        <div class="action-row">
+          <button class="secondary-button" id="deleteButton" type="button">
+            지우기
+          </button>
+          <button class="primary-button" id="submitButton" type="button">
+            제출
+          </button>
+        </div>
+      </section>
+
+      <aside class="side-panel" aria-label="게임 설정과 기록">
+        <section class="settings-panel">
+          <div class="panel-heading">
+            <h2>설정</h2>
+            <span id="answerLengthLabel">3자리</span>
+          </div>
+
+          <div class="segmented-control" role="group" aria-label="정답 자리수">
+            <button class="segment is-active" type="button" data-length="3">
+              3자리
+            </button>
+            <button class="segment" type="button" data-length="4">4자리</button>
+          </div>
+
+          <label class="toggle-line">
+            <input id="allowZeroToggle" type="checkbox" checked />
+            <span>0 포함</span>
+          </label>
+        </section>
+
+        <section class="rules-panel">
+          <h2>판정</h2>
+          <dl>
+            <div>
+              <dt>Strike</dt>
+              <dd>숫자와 위치가 모두 맞음</dd>
+            </div>
+            <div>
+              <dt>Ball</dt>
+              <dd>숫자는 맞고 위치가 다름</dd>
+            </div>
+            <div>
+              <dt>Out</dt>
+              <dd>맞는 숫자가 없음</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="history-panel">
+          <div class="panel-heading">
+            <h2>기록</h2>
+            <button class="text-button" id="revealButton" type="button">
+              정답 보기
+            </button>
+          </div>
+          <ol class="history-list" id="historyList"></ol>
+          <p class="empty-history" id="emptyHistory">
+            아직 제출한 숫자가 없습니다.
+          </p>
+        </section>
+      </aside>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
