@@ -2,10 +2,6 @@
 
 브라우저에서 바로 플레이할 수 있는 숫자 야구 게임입니다. 서로 다른 숫자로 이루어진 정답을 제한된 기회 안에 맞히고, Strike/Ball/Out 판정을 보며 다음 추측을 좁혀갑니다.
 
-## Demo
-
-- GitHub Pages: <https://ysoftman.github.io/numberbaseball/>
-
 ## Features
 
 - 3자리 또는 4자리 정답 모드
