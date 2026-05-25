@@ -27,13 +27,118 @@ const elements = {
   revealButton: document.querySelector("#revealButton"),
   themeToggle: document.querySelector("#themeToggle"),
   themeIcon: document.querySelector("#themeToggle .theme-icon"),
+  muteToggle: document.querySelector("#muteToggle"),
+  muteIcon: document.querySelector("#muteToggle .mute-icon"),
   buildVersion: document.querySelector("#buildVersion"),
   buildTime: document.querySelector("#buildTime"),
   segments: [...document.querySelectorAll(".segment")],
 };
 
 const THEME_STORAGE_KEY = "number-baseball-theme";
+const MUTE_STORAGE_KEY = "number-baseball-muted";
 const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+let audioCtx = null;
+let isMuted = (() => {
+  try {
+    return localStorage.getItem(MUTE_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+})();
+
+function ensureAudio() {
+  if (isMuted) return null;
+  if (!audioCtx) {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    try {
+      audioCtx = new Ctx();
+    } catch {
+      return null;
+    }
+  }
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume().catch(() => {});
+  }
+  return audioCtx;
+}
+
+function playTone({
+  freq,
+  duration = 0.12,
+  type = "sine",
+  volume = 0.12,
+  attack = 0.005,
+  startAt = 0,
+}) {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const t0 = ctx.currentTime + startAt;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  osc.connect(gain).connect(ctx.destination);
+  gain.gain.setValueAtTime(0, t0);
+  gain.gain.linearRampToValueAtTime(volume, t0 + attack);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+  osc.start(t0);
+  osc.stop(t0 + duration + 0.02);
+}
+
+const SOUND_PRESETS = {
+  key: [{ freq: 720, duration: 0.09, type: "triangle", volume: 0.28 }],
+  delete: [{ freq: 360, duration: 0.11, type: "triangle", volume: 0.3 }],
+  strike: [
+    { freq: 660, duration: 0.14, type: "sine", volume: 0.4 },
+    { freq: 990, duration: 0.2, type: "sine", volume: 0.4, startAt: 0.1 },
+  ],
+  ball: [{ freq: 520, duration: 0.25, type: "triangle", volume: 0.38 }],
+  out: [{ freq: 180, duration: 0.4, type: "sawtooth", volume: 0.42 }],
+  win: [
+    { freq: 523, duration: 0.18, type: "triangle", volume: 0.42 },
+    {
+      freq: 659,
+      duration: 0.18,
+      type: "triangle",
+      volume: 0.42,
+      startAt: 0.14,
+    },
+    {
+      freq: 784,
+      duration: 0.18,
+      type: "triangle",
+      volume: 0.42,
+      startAt: 0.28,
+    },
+    {
+      freq: 1047,
+      duration: 0.42,
+      type: "triangle",
+      volume: 0.46,
+      startAt: 0.42,
+    },
+  ],
+  lose: [
+    { freq: 440, duration: 0.22, type: "sawtooth", volume: 0.38 },
+    {
+      freq: 330,
+      duration: 0.24,
+      type: "sawtooth",
+      volume: 0.38,
+      startAt: 0.18,
+    },
+    { freq: 220, duration: 0.5, type: "sawtooth", volume: 0.42, startAt: 0.38 },
+  ],
+};
+
+function playSound(name) {
+  if (isMuted) return;
+  const preset = SOUND_PRESETS[name];
+  if (!preset) return;
+  preset.forEach((note) => playTone(note));
+}
 
 const BASE_ORDER_BY_LENGTH = {
   3: ["third", "second", "first"],
@@ -278,6 +383,7 @@ function addDigit(digit) {
 
   state.currentGuess.push(digit);
   setStatus("입력 중입니다.");
+  playSound("key");
   renderInput();
 }
 
@@ -293,6 +399,7 @@ function deleteDigit() {
 
   state.currentGuess.pop();
   setStatus("마지막 숫자를 지웠습니다.");
+  playSound("delete");
   renderInput();
 }
 
@@ -333,6 +440,7 @@ function submitGuess() {
   updateCallout("심판 판정", formatResult(result));
 
   if (result.strikes === state.answerLength) {
+    playSound("win");
     endGame(true);
     return;
   }
@@ -340,8 +448,17 @@ function submitGuess() {
   state.currentGuess = [];
 
   if (state.guesses.length >= MAX_ATTEMPTS) {
+    playSound("lose");
     endGame(false);
     return;
+  }
+
+  if (result.strikes > 0) {
+    playSound("strike");
+  } else if (result.balls > 0) {
+    playSound("ball");
+  } else {
+    playSound("out");
   }
 
   setStatus(`${formatResult(result)}. 다음 숫자를 입력하세요.`);
@@ -406,6 +523,27 @@ function toggleTheme() {
 }
 
 elements.themeToggle.addEventListener("click", toggleTheme);
+
+function renderMuteToggle() {
+  elements.muteIcon.textContent = isMuted ? "🔇" : "🔊";
+  elements.muteToggle.setAttribute("aria-pressed", String(isMuted));
+  const label = isMuted ? "효과음 켜기" : "효과음 끄기";
+  elements.muteToggle.setAttribute("aria-label", label);
+  elements.muteToggle.title = label;
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  try {
+    localStorage.setItem(MUTE_STORAGE_KEY, String(isMuted));
+  } catch {}
+  renderMuteToggle();
+  if (!isMuted) {
+    playSound("key");
+  }
+}
+
+elements.muteToggle.addEventListener("click", toggleMute);
 
 prefersDark.addEventListener("change", () => {
   if (!getStoredTheme()) {
@@ -487,5 +625,6 @@ function renderBuildInfo() {
 }
 
 renderThemeToggle();
+renderMuteToggle();
 renderBuildInfo();
 startGame();
