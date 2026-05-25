@@ -25,8 +25,13 @@ const elements = {
   historyList: document.querySelector("#historyList"),
   emptyHistory: document.querySelector("#emptyHistory"),
   revealButton: document.querySelector("#revealButton"),
+  themeToggle: document.querySelector("#themeToggle"),
+  themeIcon: document.querySelector("#themeToggle .theme-icon"),
   segments: [...document.querySelectorAll(".segment")],
 };
+
+const THEME_STORAGE_KEY = "number-baseball-theme";
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
 function createAnswer() {
   const pool = Array.from({ length: 10 }, (_, index) => String(index)).filter(
@@ -323,6 +328,54 @@ function revealAnswer() {
   elements.revealButton.textContent = isRevealed ? "정답 보기" : answer;
 }
 
+function getStoredTheme() {
+  try {
+    const value = localStorage.getItem(THEME_STORAGE_KEY);
+    return value === "light" || value === "dark" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function getEffectiveTheme() {
+  return getStoredTheme() ?? (prefersDark.matches ? "dark" : "light");
+}
+
+function applyTheme(theme) {
+  if (theme === "light" || theme === "dark") {
+    document.documentElement.setAttribute("data-theme", theme);
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+}
+
+function renderThemeToggle() {
+  const effective = getEffectiveTheme();
+  const isDark = effective === "dark";
+  elements.themeIcon.textContent = isDark ? "☀" : "☾";
+  elements.themeToggle.setAttribute("aria-pressed", String(isDark));
+  const label = isDark ? "라이트 모드로 전환" : "다크 모드로 전환";
+  elements.themeToggle.setAttribute("aria-label", label);
+  elements.themeToggle.title = label;
+}
+
+function toggleTheme() {
+  const next = getEffectiveTheme() === "dark" ? "light" : "dark";
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+  } catch {}
+  applyTheme(next);
+  renderThemeToggle();
+}
+
+elements.themeToggle.addEventListener("click", toggleTheme);
+
+prefersDark.addEventListener("change", () => {
+  if (!getStoredTheme()) {
+    renderThemeToggle();
+  }
+});
+
 elements.newGameButton.addEventListener("click", () =>
   startGame("새 게임을 시작했습니다."),
 );
@@ -364,4 +417,5 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+renderThemeToggle();
 startGame();

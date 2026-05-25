@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>윤준영의 숫자 야구</title>
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem("number-baseball-theme");
+          if (stored === "light" || stored === "dark") {
+            document.documentElement.setAttribute("data-theme", stored);
+          }
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body>
     <main class="app-shell">
@@ -35,6 +45,16 @@
                 <span>아재개그</span>
               </a>
             </nav>
+            <button
+              class="icon-button"
+              id="themeToggle"
+              type="button"
+              aria-label="테마 전환"
+              title="테마 전환"
+              aria-pressed="false"
+            >
+              <span class="theme-icon" aria-hidden="true">☾</span>
+            </button>
             <button
               class="icon-button"
               id="newGameButton"
@@ -70,7 +90,7 @@
                 <stop offset="100%" class="grass-end" />
               </linearGradient>
             </defs>
-            <rect width="320" height="220" rx="18" fill="url(#grass)" />
+            <rect width="320" height="220" rx="8" fill="url(#grass)" />
             <path d="M160 52 L248 132 L160 202 L72 132 Z" fill="#d6a75f" />
             <path d="M160 74 L222 132 L160 181 L98 132 Z" fill="#237d4e" />
             <g fill="#f9f4e7" stroke="#8e5c28" stroke-width="3">
