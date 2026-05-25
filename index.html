@@ -316,6 +316,31 @@
       </aside>
     </main>
 
+    <div
+      class="modal-backdrop"
+      id="confirmModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmModalMessage"
+      hidden
+    >
+      <div class="modal-card">
+        <p class="modal-message" id="confirmModalMessage"></p>
+        <div class="modal-actions">
+          <button
+            class="secondary-button"
+            id="confirmModalCancel"
+            type="button"
+          >
+            취소
+          </button>
+          <button class="primary-button" id="confirmModalOk" type="button">
+            확인
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>

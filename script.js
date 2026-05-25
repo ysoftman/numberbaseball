@@ -37,6 +37,10 @@ const elements = {
   revealButton: document.querySelector("#revealButton"),
   rulesButton: document.querySelector("#rulesButton"),
   rulesTooltip: document.querySelector("#rulesTooltip"),
+  confirmModal: document.querySelector("#confirmModal"),
+  confirmModalMessage: document.querySelector("#confirmModalMessage"),
+  confirmModalOk: document.querySelector("#confirmModalOk"),
+  confirmModalCancel: document.querySelector("#confirmModalCancel"),
   themeToggle: document.querySelector("#themeToggle"),
   themeIcon: document.querySelector("#themeToggle .theme-icon"),
   muteToggle: document.querySelector("#muteToggle"),
@@ -481,9 +485,56 @@ function submitGuess() {
   render();
 }
 
-function revealAnswer() {
+let confirmModalState = null;
+
+function openConfirmModal(message) {
+  return new Promise((resolve) => {
+    if (confirmModalState) {
+      confirmModalState.cleanup(false);
+    }
+    elements.confirmModalMessage.textContent = message;
+    elements.confirmModal.hidden = false;
+
+    const cleanup = (result) => {
+      elements.confirmModal.hidden = true;
+      document.removeEventListener("keydown", onKeyDown, true);
+      elements.confirmModalOk.removeEventListener("click", onOk);
+      elements.confirmModalCancel.removeEventListener("click", onCancel);
+      elements.confirmModal.removeEventListener("click", onBackdrop);
+      confirmModalState = null;
+      resolve(result);
+    };
+
+    const onOk = () => cleanup(true);
+    const onCancel = () => cleanup(false);
+    const onBackdrop = (event) => {
+      if (event.target === elements.confirmModal) cleanup(false);
+    };
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cleanup(false);
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        cleanup(true);
+      }
+    };
+
+    confirmModalState = { cleanup };
+    elements.confirmModalOk.addEventListener("click", onOk);
+    elements.confirmModalCancel.addEventListener("click", onCancel);
+    elements.confirmModal.addEventListener("click", onBackdrop);
+    document.addEventListener("keydown", onKeyDown, true);
+
+    requestAnimationFrame(() => {
+      elements.confirmModalOk.focus();
+    });
+  });
+}
+
+async function revealAnswer() {
   if (!state.isGameOver) {
-    const confirmed = window.confirm(
+    const confirmed = await openConfirmModal(
       "정답을 보면 이번 게임은 종료됩니다. 계속할까요?",
     );
     if (!confirmed) {
