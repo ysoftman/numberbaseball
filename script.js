@@ -192,15 +192,20 @@ function renderControls() {
 
   elements.submitButton.disabled = !canSubmit;
   elements.deleteButton.disabled = !canDelete;
+  elements.revealButton.disabled = !state.isGameOver;
+}
+
+function renderInput() {
+  renderDigits();
+  renderKeypad();
+  renderControls();
 }
 
 function render() {
-  renderDigits();
-  renderKeypad();
+  renderInput();
   renderHistory();
   renderSettings();
   renderStats();
-  renderControls();
 }
 
 function startGame(message = "서로 다른 숫자를 입력하세요.") {
@@ -236,7 +241,7 @@ function addDigit(digit) {
 
   state.currentGuess.push(digit);
   setStatus("입력 중입니다.");
-  render();
+  renderInput();
 }
 
 function deleteDigit() {
@@ -251,7 +256,7 @@ function deleteDigit() {
 
   state.currentGuess.pop();
   setStatus("마지막 숫자를 지웠습니다.");
-  render();
+  renderInput();
 }
 
 function endGame(hasWon) {
@@ -309,6 +314,10 @@ function submitGuess() {
 }
 
 function revealAnswer() {
+  if (!state.isGameOver) {
+    return;
+  }
+
   const answer = state.answer.join("");
   const isRevealed = elements.revealButton.textContent === answer;
   elements.revealButton.textContent = isRevealed ? "정답 보기" : answer;

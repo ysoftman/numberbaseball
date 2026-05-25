@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --bg: #edf2ee;
   --surface: #ffffff;
   --surface-strong: #fbfdfb;
@@ -29,8 +29,17 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    linear-gradient(120deg, rgb(31 139 84 / 8%), transparent 42%),
-    linear-gradient(320deg, rgb(182 59 53 / 8%), transparent 40%), var(--bg);
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--green) 8%, transparent),
+      transparent 42%
+    ),
+    linear-gradient(
+      320deg,
+      color-mix(in srgb, var(--red) 8%, transparent),
+      transparent 40%
+    ),
+    var(--bg);
   color: var(--ink);
 }
 
@@ -76,7 +85,7 @@ a {
 
 .side-panel {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 16px;
 }
 
@@ -171,7 +180,7 @@ h2 {
 .secondary-button:focus-visible,
 .segment:focus-visible,
 .digit-key:focus-visible {
-  outline: 3px solid rgb(31 139 84 / 28%);
+  outline: 3px solid var(--green);
   outline-offset: 2px;
 }
 
@@ -247,7 +256,7 @@ dd {
   min-height: 220px;
   border-radius: 8px;
   overflow: hidden;
-  background: #1f8b54;
+  background: var(--green);
 }
 
 .field-art {
@@ -255,6 +264,14 @@ dd {
   height: 100%;
   min-height: 220px;
   display: block;
+}
+
+.field-art .grass-start {
+  stop-color: var(--green);
+}
+
+.field-art .grass-end {
+  stop-color: var(--green-dark);
 }
 
 .result-callout {
@@ -485,14 +502,14 @@ dd {
   white-space: nowrap;
   border-radius: 999px;
   padding: 6px 9px;
-  background: rgb(31 139 84 / 12%);
+  background: color-mix(in srgb, var(--green) 20%, transparent);
   color: var(--green-dark);
   font-size: 0.82rem;
   font-weight: 900;
 }
 
 .history-result.is-out {
-  background: rgb(182 59 53 / 12%);
+  background: color-mix(in srgb, var(--red) 20%, transparent);
   color: var(--red);
 }
 
@@ -501,6 +518,22 @@ dd {
   align-self: start;
   padding: 24px 0;
   text-align: center;
+}
+
+.build-meta {
+  padding: 0 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.build-meta strong,
+.build-meta time {
+  color: var(--green-dark);
+  font-weight: 900;
 }
 
 .is-hidden {
@@ -518,7 +551,7 @@ dd {
   }
 
   .side-panel {
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
   }
 
   .history-panel {
@@ -606,5 +639,47 @@ dd {
   .rules-panel dl div {
     grid-template-columns: 1fr;
     gap: 2px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121814;
+    --surface: #1b241e;
+    --surface-strong: #222d25;
+    --ink: #eef6ee;
+    --muted: #afbbb2;
+    --line: #344238;
+    --green: #2c9e62;
+    --green-dark: #7bd99e;
+    --red: #ef7b70;
+    --cream: #fff2cf;
+    --shadow: 0 18px 48px rgb(0 0 0 / 24%);
+  }
+
+  .segment.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .icon-button:hover,
+  .link-button:hover,
+  .text-button:hover,
+  .primary-button:hover,
+  .secondary-button:hover,
+  .segment:hover,
+  .digit-key:hover {
+    transform: none;
   }
 }

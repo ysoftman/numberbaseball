@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>숫자 야구</title>
+    <title>윤준영의 숫자 야구</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app-shell">
-      <section class="game-board" aria-label="숫자 야구 게임">
+      <section class="game-board" aria-label="윤준영의 숫자 야구 게임">
         <div class="topbar">
           <div>
             <p class="eyebrow">Number Baseball</p>
-            <h1>숫자 야구</h1>
+            <h1>윤준영의 숫자 야구</h1>
           </div>
           <div class="topbar-actions">
             <nav class="app-links" aria-label="다른 앱으로 이동">
@@ -54,7 +54,7 @@
           </div>
           <div>
             <span>남은 기회</span>
-            <strong id="remainingCount">10</strong>
+            <strong id="remainingCount">-</strong>
           </div>
           <div>
             <span>최고 기록</span>
@@ -63,11 +63,11 @@
         </div>
 
         <div class="field-panel" aria-hidden="true">
-          <svg class="field-art" viewBox="0 0 320 220" role="img">
+          <svg class="field-art" viewBox="0 0 320 220" focusable="false">
             <defs>
               <linearGradient id="grass" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stop-color="#1f8b54" />
-                <stop offset="100%" stop-color="#176f45" />
+                <stop offset="0%" class="grass-start" />
+                <stop offset="100%" class="grass-end" />
               </linearGradient>
             </defs>
             <rect width="320" height="220" rx="18" fill="url(#grass)" />
@@ -120,16 +120,18 @@
               stroke-width="3"
             />
             <path
-              d="M149 122 C155 132 155 141 149 148"
+              d="M150 122 C156 128 156 136 150 142"
               fill="none"
               stroke="#b63b35"
               stroke-width="2"
+              stroke-linecap="round"
             />
             <path
-              d="M171 122 C165 132 165 141 171 148"
+              d="M170 122 C164 128 164 136 170 142"
               fill="none"
               stroke="#b63b35"
               stroke-width="2"
+              stroke-linecap="round"
             />
           </svg>
           <div class="result-callout" id="resultCallout">
@@ -210,6 +212,19 @@
             아직 제출한 숫자가 없습니다.
           </p>
         </section>
+
+        <footer class="build-meta" aria-label="빌드 정보">
+          <span>
+            버전
+            <strong id="buildVersion" data-build-version="__BUILD_VERSION__">
+              local
+            </strong>
+          </span>
+          <span>
+            빌드
+            <time id="buildTime" data-build-time="__BUILD_TIME__">-</time>
+          </span>
+        </footer>
       </aside>
     </main>
 
