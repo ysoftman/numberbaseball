@@ -91,6 +91,9 @@ a {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 16px;
+  max-height: calc(100vh - 64px);
+  position: sticky;
+  top: 32px;
 }
 
 .side-panel > section {
@@ -484,9 +487,16 @@ dd {
   color: white;
 }
 
+.settings-options {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+}
+
 .toggle-line {
   min-height: 44px;
-  margin-top: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -495,6 +505,30 @@ dd {
 }
 
 .toggle-line input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--green);
+}
+
+.radio-group {
+  min-height: 44px;
+  margin-left: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.radio-option input {
   width: 18px;
   height: 18px;
   accent-color: var(--green);
@@ -601,7 +635,8 @@ dd {
   margin: 0;
   padding: 0;
   list-style: none;
-  overflow: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -705,6 +740,8 @@ dd {
 
   .side-panel {
     grid-template-rows: auto auto;
+    position: static;
+    max-height: none;
   }
 
   .history-panel {

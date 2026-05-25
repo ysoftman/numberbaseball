@@ -1,8 +1,21 @@
-const MAX_ATTEMPTS = 10;
+const ATTEMPT_OPTIONS = [10, 15, 20];
+const DEFAULT_MAX_ATTEMPTS = 10;
+const ATTEMPTS_STORAGE_KEY = "number-baseball-max-attempts";
+
+function loadMaxAttempts() {
+  try {
+    const saved = Number(localStorage.getItem(ATTEMPTS_STORAGE_KEY));
+    if (ATTEMPT_OPTIONS.includes(saved)) {
+      return saved;
+    }
+  } catch {}
+  return DEFAULT_MAX_ATTEMPTS;
+}
 
 const state = {
   answerLength: 3,
   allowZero: true,
+  maxAttempts: loadMaxAttempts(),
   answer: [],
   currentGuess: [],
   guesses: [],
@@ -31,6 +44,7 @@ const elements = {
   buildVersion: document.querySelector("#buildVersion"),
   buildTime: document.querySelector("#buildTime"),
   segments: [...document.querySelectorAll(".segment[data-length]")],
+  attemptsRadios: [...document.querySelectorAll('input[name="maxAttempts"]')],
 };
 
 const THEME_STORAGE_KEY = "number-baseball-theme";
@@ -161,7 +175,7 @@ function createAnswer() {
 }
 
 function getStorageKey() {
-  return `number-baseball-best-${state.answerLength}-${state.allowZero ? "zero" : "no-zero"}`;
+  return `number-baseball-best-${state.answerLength}-${state.allowZero ? "zero" : "no-zero"}-${state.maxAttempts}`;
 }
 
 function getBestScore() {
@@ -313,13 +327,19 @@ function renderSettings() {
     segment.classList.toggle("is-active", isActive);
     segment.setAttribute("aria-pressed", String(isActive));
   });
+  elements.attemptsRadios.forEach((radio) => {
+    radio.checked = Number(radio.value) === state.maxAttempts;
+  });
 }
 
 function renderStats() {
   const attempts = state.guesses.length;
   const best = getBestScore();
 
-  elements.remainingCount.textContent = Math.max(MAX_ATTEMPTS - attempts, 0);
+  elements.remainingCount.textContent = Math.max(
+    state.maxAttempts - attempts,
+    0,
+  );
   elements.bestScore.textContent = best ? `${best}회` : "-";
 }
 
@@ -443,7 +463,7 @@ function submitGuess() {
 
   state.currentGuess = [];
 
-  if (state.guesses.length >= MAX_ATTEMPTS) {
+  if (state.guesses.length >= state.maxAttempts) {
     playSound("lose");
     endGame(false);
     return;
@@ -586,6 +606,20 @@ document.addEventListener("keydown", (event) => {
 elements.allowZeroToggle.addEventListener("change", (event) => {
   state.allowZero = event.target.checked;
   startGame("설정이 바뀌어 새 게임을 시작했습니다.");
+});
+
+elements.attemptsRadios.forEach((radio) => {
+  radio.addEventListener("change", (event) => {
+    const next = Number(event.target.value);
+    if (!ATTEMPT_OPTIONS.includes(next) || next === state.maxAttempts) {
+      return;
+    }
+    state.maxAttempts = next;
+    try {
+      localStorage.setItem(ATTEMPTS_STORAGE_KEY, String(next));
+    } catch {}
+    startGame(`기회가 ${next}회로 바뀌어 새 게임을 시작했습니다.`);
+  });
 });
 
 elements.segments.forEach((segment) => {

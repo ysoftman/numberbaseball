@@ -85,10 +85,32 @@
             </button>
           </div>
 
-          <label class="toggle-line">
-            <input id="allowZeroToggle" type="checkbox" checked />
-            <span>0 포함</span>
-          </label>
+          <div class="settings-options">
+            <label class="toggle-line">
+              <input id="allowZeroToggle" type="checkbox" checked />
+              <span>0 포함</span>
+            </label>
+
+            <div
+              class="radio-group"
+              id="attemptsGroup"
+              role="radiogroup"
+              aria-label="기회"
+            >
+              <label class="radio-option">
+                <input type="radio" name="maxAttempts" value="10" checked />
+                <span>10회</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="maxAttempts" value="15" />
+                <span>15회</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="maxAttempts" value="20" />
+                <span>20회</span>
+              </label>
+            </div>
+          </div>
         </section>
 
         <div class="field-panel">
