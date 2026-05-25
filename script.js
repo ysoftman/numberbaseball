@@ -14,7 +14,7 @@ const elements = {
   remainingCount: document.querySelector("#remainingCount"),
   bestScore: document.querySelector("#bestScore"),
   resultCallout: document.querySelector("#resultCallout"),
-  digitDisplay: document.querySelector("#digitDisplay"),
+  fieldSlots: document.querySelector("#fieldSlots"),
   statusText: document.querySelector("#statusText"),
   keypad: document.querySelector("#keypad"),
   submitButton: document.querySelector("#submitButton"),
@@ -34,6 +34,11 @@ const elements = {
 
 const THEME_STORAGE_KEY = "number-baseball-theme";
 const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+const BASE_ORDER_BY_LENGTH = {
+  3: ["third", "second", "first"],
+  4: ["third", "second", "home", "first"],
+};
 
 function createAnswer() {
   const pool = Array.from({ length: 10 }, (_, index) => String(index)).filter(
@@ -135,24 +140,32 @@ function setStatus(message, tone = "normal") {
   elements.statusText.classList.toggle("is-success", tone === "success");
 }
 
-function updateCallout(label, value) {
+function updateCallout(label, value, tone = "normal") {
   elements.resultCallout.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
+  elements.resultCallout.classList.toggle("is-win", tone === "win");
+  elements.resultCallout.classList.toggle("is-lose", tone === "lose");
 }
 
 function renderDigits() {
-  elements.digitDisplay.style.setProperty(
-    "--answer-length",
-    state.answerLength,
-  );
-  elements.digitDisplay.innerHTML = "";
+  const bases = BASE_ORDER_BY_LENGTH[state.answerLength] ?? [];
+  const slots = elements.fieldSlots.querySelectorAll(".digit-slot");
 
-  for (let index = 0; index < state.answerLength; index += 1) {
-    const slot = document.createElement("div");
-    slot.className = "digit-slot";
-    slot.textContent = state.currentGuess[index] ?? "";
-    slot.classList.toggle("is-filled", Boolean(state.currentGuess[index]));
-    elements.digitDisplay.append(slot);
-  }
+  slots.forEach((slot) => {
+    const position = bases.indexOf(slot.dataset.base);
+    const text = slot.querySelector("text");
+
+    if (position === -1) {
+      slot.classList.add("is-hidden-slot");
+      slot.classList.remove("is-filled");
+      text.textContent = "";
+      return;
+    }
+
+    const digit = state.currentGuess[position] ?? "";
+    slot.classList.remove("is-hidden-slot");
+    slot.classList.toggle("is-filled", Boolean(digit));
+    text.textContent = digit;
+  });
 }
 
 function renderKeypad() {
@@ -292,13 +305,10 @@ function endGame(hasWon) {
       `정답입니다. ${state.guesses.length}번 만에 성공했습니다.`,
       "success",
     );
-    updateCallout("홈런", `${state.guesses.length}회 성공`);
+    updateCallout("홈런", `${state.guesses.length}번 만에 정답!`, "win");
   } else {
-    setStatus(
-      `기회가 끝났습니다. 정답은 ${state.answer.join("")} 입니다.`,
-      "error",
-    );
-    updateCallout("게임 종료", `정답 ${state.answer.join("")}`);
+    setStatus("", "error");
+    updateCallout("패배", `정답은 ${state.answer.join("")}`, "lose");
   }
 
   render();
@@ -320,13 +330,14 @@ function submitGuess() {
     result,
   });
 
-  state.currentGuess = [];
   updateCallout("심판 판정", formatResult(result));
 
   if (result.strikes === state.answerLength) {
     endGame(true);
     return;
   }
+
+  state.currentGuess = [];
 
   if (state.guesses.length >= MAX_ATTEMPTS) {
     endGame(false);

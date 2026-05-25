@@ -83,19 +83,26 @@ a {
   padding: 28px;
   border-radius: 8px;
   display: grid;
-  grid-template-rows: auto auto minmax(220px, 1fr) auto auto auto auto;
+  grid-template-rows: auto auto minmax(220px, 1fr) auto auto auto;
   gap: 18px;
 }
 
 .side-panel {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 16px;
 }
 
 .side-panel > section {
   border-radius: 8px;
   padding: 20px;
+}
+
+.game-board > .settings-panel {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
 }
 
 .topbar,
@@ -229,36 +236,45 @@ h2 {
 }
 
 .score-strip {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--surface-strong);
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  display: inline-flex;
+  gap: 10px;
+  padding: 6px 12px;
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: 999px;
+  background: rgb(23 32 26 / 78%);
+  color: var(--cream);
 }
 
 .score-strip div {
-  min-width: 0;
-  padding: 14px 16px;
-  display: grid;
+  display: inline-flex;
+  align-items: baseline;
   gap: 4px;
-  border-right: 1px solid var(--line);
 }
 
-.score-strip div:last-child {
-  border-right: 0;
+.score-strip div + div {
+  padding-left: 10px;
+  border-left: 1px solid rgb(255 255 255 / 18%);
 }
 
-.score-strip span,
+.score-strip span {
+  font-size: 0.68rem;
+  color: rgb(249 244 231 / 70%);
+}
+
+.score-strip strong {
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
 .panel-heading span,
 .status-text,
 .empty-history,
 dd {
   color: var(--muted);
-}
-
-.score-strip strong {
-  font-size: 1.45rem;
 }
 
 .field-panel {
@@ -294,6 +310,23 @@ dd {
   gap: 4px;
 }
 
+.result-callout.is-win {
+  background: color-mix(in srgb, var(--green) 88%, black);
+  border-color: color-mix(in srgb, var(--green) 40%, white);
+  color: #fff;
+}
+
+.result-callout.is-lose {
+  background: color-mix(in srgb, var(--red) 88%, black);
+  border-color: color-mix(in srgb, var(--red) 40%, white);
+  color: #fff;
+}
+
+.result-callout.is-win span,
+.result-callout.is-lose span {
+  color: rgb(255 255 255 / 82%);
+}
+
 .result-callout span {
   font-size: 0.78rem;
   color: rgb(249 244 231 / 76%);
@@ -303,26 +336,41 @@ dd {
   font-size: 1.1rem;
 }
 
-.digit-display {
-  display: grid;
-  grid-template-columns: repeat(var(--answer-length, 3), minmax(56px, 1fr));
-  gap: 10px;
+.field-slots {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-.digit-slot {
-  height: 74px;
-  border: 2px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface-strong);
-  display: grid;
-  place-items: center;
-  font-size: clamp(2rem, 7vw, 3rem);
+.field-slots .digit-slot circle {
+  fill: rgb(23 32 26 / 78%);
+  stroke: var(--cream);
+  stroke-width: 2;
+  transition:
+    fill 180ms ease,
+    stroke 180ms ease;
+}
+
+.field-slots .digit-slot text {
+  fill: var(--cream);
+  font-family: inherit;
+  font-size: 20px;
   font-weight: 900;
-  line-height: 1;
 }
 
-.digit-slot.is-filled {
-  border-color: var(--green);
+.field-slots .digit-slot.is-filled circle {
+  fill: var(--green);
+  stroke: var(--cream);
+}
+
+.field-slots .digit-slot.is-filled text {
+  fill: #fff;
+}
+
+.field-slots .digit-slot.is-hidden-slot {
+  display: none;
 }
 
 .status-text {
@@ -632,29 +680,44 @@ dd {
   }
 
   .score-strip {
-    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 4px 10px;
   }
 
-  .score-strip div {
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
+  .score-strip div + div {
+    padding-left: 6px;
   }
 
-  .score-strip div:last-child {
-    border-bottom: 0;
+  .score-strip span {
+    font-size: 0.62rem;
+  }
+
+  .score-strip strong {
+    font-size: 0.85rem;
   }
 
   .result-callout {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    top: 8px;
+    bottom: auto;
+    right: 8px;
+    left: auto;
+    transform: none;
     min-width: 0;
+    max-width: calc(100% - 16px);
+    padding: 6px 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    white-space: nowrap;
   }
 
-  .digit-slot {
-    height: 62px;
+  .result-callout span {
+    font-size: 0.7rem;
+  }
+
+  .result-callout strong {
+    font-size: 0.9rem;
   }
 
   .keypad {

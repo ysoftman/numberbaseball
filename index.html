@@ -67,23 +67,32 @@
           </div>
         </div>
 
-        <div class="score-strip" aria-label="현재 게임 상태">
-          <div>
-            <span>시도</span>
-            <strong id="attemptCount">0</strong>
+        <section class="settings-panel">
+          <div class="panel-heading">
+            <h2>설정</h2>
+            <span id="answerLengthLabel">3자리</span>
           </div>
-          <div>
-            <span>남은 기회</span>
-            <strong id="remainingCount">-</strong>
-          </div>
-          <div>
-            <span>최고 기록</span>
-            <strong id="bestScore">-</strong>
-          </div>
-        </div>
 
-        <div class="field-panel" aria-hidden="true">
-          <svg class="field-art" viewBox="0 0 320 220" focusable="false">
+          <div class="segmented-control" role="group" aria-label="정답 자리수">
+            <button class="segment is-active" type="button" data-length="3">
+              3자리
+            </button>
+            <button class="segment" type="button" data-length="4">4자리</button>
+          </div>
+
+          <label class="toggle-line">
+            <input id="allowZeroToggle" type="checkbox" checked />
+            <span>0 포함</span>
+          </label>
+        </section>
+
+        <div class="field-panel">
+          <svg
+            class="field-art"
+            viewBox="0 17 320 220"
+            focusable="false"
+            aria-hidden="true"
+          >
             <path d="M160 52 L248 132 L160 202 L72 132 Z" fill="#d6a75f" />
             <path d="M160 74 L222 132 L160 181 L98 132 Z" fill="#237d4e" />
             <g fill="#f9f4e7" stroke="#8e5c28" stroke-width="3">
@@ -139,17 +148,69 @@
               stroke-linecap="round"
             />
           </svg>
+          <svg
+            class="field-slots"
+            id="fieldSlots"
+            viewBox="0 17 320 220"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <g class="digit-slot" data-base="home">
+              <circle cx="160" cy="202" r="18" />
+              <text
+                x="160"
+                y="202"
+                text-anchor="middle"
+                dominant-baseline="central"
+              ></text>
+            </g>
+            <g class="digit-slot" data-base="first">
+              <circle cx="249" cy="133" r="18" />
+              <text
+                x="249"
+                y="133"
+                text-anchor="middle"
+                dominant-baseline="central"
+              ></text>
+            </g>
+            <g class="digit-slot" data-base="second">
+              <circle cx="160" cy="53" r="18" />
+              <text
+                x="160"
+                y="53"
+                text-anchor="middle"
+                dominant-baseline="central"
+              ></text>
+            </g>
+            <g class="digit-slot" data-base="third">
+              <circle cx="71" cy="133" r="18" />
+              <text
+                x="71"
+                y="133"
+                text-anchor="middle"
+                dominant-baseline="central"
+              ></text>
+            </g>
+          </svg>
+          <div class="score-strip" aria-label="현재 게임 상태">
+            <div>
+              <span>시도</span>
+              <strong id="attemptCount">0</strong>
+            </div>
+            <div>
+              <span>남은 기회</span>
+              <strong id="remainingCount">-</strong>
+            </div>
+            <div>
+              <span>최고 기록</span>
+              <strong id="bestScore">-</strong>
+            </div>
+          </div>
           <div class="result-callout" id="resultCallout">
             <span>플레이 볼</span>
             <strong>정답을 맞혀보세요</strong>
           </div>
         </div>
-
-        <div
-          class="digit-display"
-          id="digitDisplay"
-          aria-label="입력한 숫자"
-        ></div>
 
         <p class="status-text" id="statusText" role="status" aria-live="polite">
           서로 다른 숫자를 입력하세요.
@@ -167,26 +228,7 @@
         </div>
       </section>
 
-      <aside class="side-panel" aria-label="게임 설정과 기록">
-        <section class="settings-panel">
-          <div class="panel-heading">
-            <h2>설정</h2>
-            <span id="answerLengthLabel">3자리</span>
-          </div>
-
-          <div class="segmented-control" role="group" aria-label="정답 자리수">
-            <button class="segment is-active" type="button" data-length="3">
-              3자리
-            </button>
-            <button class="segment" type="button" data-length="4">4자리</button>
-          </div>
-
-          <label class="toggle-line">
-            <input id="allowZeroToggle" type="checkbox" checked />
-            <span>0 포함</span>
-          </label>
-        </section>
-
+      <aside class="side-panel" aria-label="게임 기록과 판정">
         <section class="rules-panel">
           <h2>판정</h2>
           <dl>
