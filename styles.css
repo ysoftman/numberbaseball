@@ -89,7 +89,7 @@ a {
 
 .side-panel {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 16px;
 }
 
@@ -280,7 +280,6 @@ h2 {
 
 .panel-heading span,
 .status-text,
-.empty-history,
 dd {
   color: var(--muted);
 }
@@ -454,15 +453,16 @@ dd {
   transform: none;
 }
 
-.segmented-control {
+.settings-controls {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 14px;
 }
 
 .segment {
+  width: 100%;
   min-height: 44px;
+  padding: 0 8px;
   border-radius: 8px;
   font-weight: 800;
 }
@@ -470,6 +470,17 @@ dd {
 .segment.is-active {
   background: var(--ink);
   border-color: var(--ink);
+  color: white;
+}
+
+.segment.new-game {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.segment.new-game:hover {
+  background: var(--green-dark);
   color: white;
 }
 
@@ -489,17 +500,63 @@ dd {
   accent-color: var(--green);
 }
 
-.rules-panel dl {
-  margin: 14px 0 0;
-  display: grid;
-  gap: 12px;
+.panel-heading-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.rules-panel dl div {
+.rules-tooltip-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.rules-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.rules-tooltip[hidden] {
+  display: none;
+}
+
+.rules-tooltip::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 16px;
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+  transform: rotate(45deg);
+}
+
+.rules-tooltip dl {
+  margin: 0;
   display: grid;
-  grid-template-columns: 72px 1fr;
+  gap: 10px;
+}
+
+.rules-tooltip dl div {
+  display: grid;
+  grid-template-columns: 64px 1fr;
   gap: 10px;
   align-items: baseline;
+}
+
+.rules-tooltip dd {
+  white-space: nowrap;
 }
 
 dt {
@@ -608,11 +665,16 @@ dd {
   color: var(--red);
 }
 
-.empty-history {
-  grid-row: 2;
-  align-self: start;
-  padding: 24px 0;
+.history-list:empty::before {
+  content: attr(data-empty-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 100px;
+  padding: 24px;
   text-align: center;
+  color: var(--muted);
 }
 
 .build-meta {
@@ -631,10 +693,6 @@ dd {
   font-weight: 900;
 }
 
-.is-hidden {
-  display: none;
-}
-
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -646,7 +704,7 @@ dd {
   }
 
   .side-panel {
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto;
   }
 
   .history-panel {
@@ -711,6 +769,9 @@ dd {
   }
 
   .result-callout {
+    top: auto;
+    right: 8px;
+    bottom: 8px;
     padding: 6px 12px;
   }
 
@@ -735,9 +796,34 @@ dd {
     min-width: 96px;
   }
 
-  .rules-panel dl div {
-    grid-template-columns: 1fr;
-    gap: 2px;
+  .rules-tooltip-wrap {
+    position: static;
+  }
+
+  .history-panel > .panel-heading {
+    position: relative;
+  }
+
+  .rules-tooltip {
+    left: 0;
+    right: 0;
+    width: auto;
+    max-width: none;
+    padding: 12px 14px;
+    font-size: 0.85rem;
+  }
+
+  .rules-tooltip dl div {
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+  }
+
+  .rules-tooltip dd {
+    white-space: nowrap;
+  }
+
+  .rules-tooltip::before {
+    right: 100px;
   }
 }
 

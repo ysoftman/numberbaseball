@@ -10,7 +10,6 @@ const state = {
 };
 
 const elements = {
-  attemptCount: document.querySelector("#attemptCount"),
   remainingCount: document.querySelector("#remainingCount"),
   bestScore: document.querySelector("#bestScore"),
   resultCallout: document.querySelector("#resultCallout"),
@@ -21,17 +20,17 @@ const elements = {
   deleteButton: document.querySelector("#deleteButton"),
   newGameButton: document.querySelector("#newGameButton"),
   allowZeroToggle: document.querySelector("#allowZeroToggle"),
-  answerLengthLabel: document.querySelector("#answerLengthLabel"),
   historyList: document.querySelector("#historyList"),
-  emptyHistory: document.querySelector("#emptyHistory"),
   revealButton: document.querySelector("#revealButton"),
+  rulesButton: document.querySelector("#rulesButton"),
+  rulesTooltip: document.querySelector("#rulesTooltip"),
   themeToggle: document.querySelector("#themeToggle"),
   themeIcon: document.querySelector("#themeToggle .theme-icon"),
   muteToggle: document.querySelector("#muteToggle"),
   muteIcon: document.querySelector("#muteToggle .mute-icon"),
   buildVersion: document.querySelector("#buildVersion"),
   buildTime: document.querySelector("#buildTime"),
-  segments: [...document.querySelectorAll(".segment")],
+  segments: [...document.querySelectorAll(".segment[data-length]")],
 };
 
 const THEME_STORAGE_KEY = "number-baseball-theme";
@@ -294,7 +293,6 @@ function renderKeypad() {
 
 function renderHistory() {
   elements.historyList.innerHTML = "";
-  elements.emptyHistory.classList.toggle("is-hidden", state.guesses.length > 0);
 
   state.guesses.forEach((entry, index) => {
     const item = document.createElement("li");
@@ -309,7 +307,6 @@ function renderHistory() {
 }
 
 function renderSettings() {
-  elements.answerLengthLabel.textContent = `${state.answerLength}자리`;
   elements.allowZeroToggle.checked = state.allowZero;
   elements.segments.forEach((segment) => {
     const isActive = Number(segment.dataset.length) === state.answerLength;
@@ -322,7 +319,6 @@ function renderStats() {
   const attempts = state.guesses.length;
   const best = getBestScore();
 
-  elements.attemptCount.textContent = attempts;
   elements.remainingCount.textContent = Math.max(MAX_ATTEMPTS - attempts, 0);
   elements.bestScore.textContent = best ? `${best}회` : "-";
 }
@@ -557,6 +553,35 @@ elements.newGameButton.addEventListener("click", () =>
 elements.submitButton.addEventListener("click", submitGuess);
 elements.deleteButton.addEventListener("click", deleteDigit);
 elements.revealButton.addEventListener("click", revealAnswer);
+
+function setRulesTooltipOpen(open) {
+  elements.rulesTooltip.hidden = !open;
+  elements.rulesButton.setAttribute("aria-expanded", String(open));
+}
+
+elements.rulesButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  setRulesTooltipOpen(elements.rulesTooltip.hidden);
+});
+
+document.addEventListener("click", (event) => {
+  if (elements.rulesTooltip.hidden) {
+    return;
+  }
+  if (
+    !elements.rulesTooltip.contains(event.target) &&
+    event.target !== elements.rulesButton
+  ) {
+    setRulesTooltipOpen(false);
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !elements.rulesTooltip.hidden) {
+    setRulesTooltipOpen(false);
+    elements.rulesButton.focus();
+  }
+});
 
 elements.allowZeroToggle.addEventListener("change", (event) => {
   state.allowZero = event.target.checked;

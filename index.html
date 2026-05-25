@@ -65,29 +65,24 @@
             >
               <span class="mute-icon" aria-hidden="true">🔊</span>
             </button>
+          </div>
+        </div>
+
+        <section class="settings-panel">
+          <div class="settings-controls">
+            <button class="segment is-active" type="button" data-length="3">
+              3자리
+            </button>
+            <button class="segment" type="button" data-length="4">4자리</button>
             <button
-              class="icon-button"
+              class="segment new-game"
               id="newGameButton"
               type="button"
               aria-label="새 게임"
               title="새 게임"
             >
-              <span aria-hidden="true">↻</span>
+              새 게임
             </button>
-          </div>
-        </div>
-
-        <section class="settings-panel">
-          <div class="panel-heading">
-            <h2>설정</h2>
-            <span id="answerLengthLabel">3자리</span>
-          </div>
-
-          <div class="segmented-control" role="group" aria-label="정답 자리수">
-            <button class="segment is-active" type="button" data-length="3">
-              3자리
-            </button>
-            <button class="segment" type="button" data-length="4">4자리</button>
           </div>
 
           <label class="toggle-line">
@@ -204,10 +199,6 @@
           </svg>
           <div class="score-strip" aria-label="현재 게임 상태">
             <div>
-              <span>시도</span>
-              <strong id="attemptCount">0</strong>
-            </div>
-            <div>
               <span>남은 기회</span>
               <strong id="remainingCount">-</strong>
             </div>
@@ -239,35 +230,53 @@
       </section>
 
       <aside class="side-panel" aria-label="게임 기록과 판정">
-        <section class="rules-panel">
-          <h2>판정</h2>
-          <dl>
-            <div>
-              <dt class="rule-strike">Strike</dt>
-              <dd>숫자와 위치가 모두 맞음</dd>
-            </div>
-            <div>
-              <dt class="rule-ball">Ball</dt>
-              <dd>숫자는 맞고 위치가 다름</dd>
-            </div>
-            <div>
-              <dt class="rule-out">Out</dt>
-              <dd>맞는 숫자가 없음</dd>
-            </div>
-          </dl>
-        </section>
-
         <section class="history-panel">
           <div class="panel-heading">
             <h2>기록</h2>
-            <button class="text-button" id="revealButton" type="button">
-              정답 보기
-            </button>
+            <div class="panel-heading-actions">
+              <div class="rules-tooltip-wrap">
+                <button
+                  class="text-button"
+                  id="rulesButton"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="rulesTooltip"
+                >
+                  판정
+                </button>
+                <div
+                  class="rules-tooltip"
+                  id="rulesTooltip"
+                  role="dialog"
+                  aria-label="판정 규칙"
+                  hidden
+                >
+                  <dl>
+                    <div>
+                      <dt class="rule-strike">Strike</dt>
+                      <dd>숫자와 위치가 모두 맞음</dd>
+                    </div>
+                    <div>
+                      <dt class="rule-ball">Ball</dt>
+                      <dd>숫자는 맞고 위치가 다름</dd>
+                    </div>
+                    <div>
+                      <dt class="rule-out">Out</dt>
+                      <dd>맞는 숫자가 없음</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              <button class="text-button" id="revealButton" type="button">
+                정답 보기
+              </button>
+            </div>
           </div>
-          <ol class="history-list" id="historyList"></ol>
-          <p class="empty-history" id="emptyHistory">
-            아직 제출한 숫자가 없습니다.
-          </p>
+          <ol
+            class="history-list"
+            id="historyList"
+            data-empty-text="아직 제출한 숫자가 없습니다."
+          ></ol>
         </section>
 
         <footer class="build-meta" aria-label="빌드 정보">
