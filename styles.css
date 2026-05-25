@@ -43,6 +43,10 @@ button {
   cursor: pointer;
 }
 
+a {
+  color: inherit;
+}
+
 .app-shell {
   width: min(1180px, calc(100vw - 32px));
   min-height: 100vh;
@@ -90,6 +94,23 @@ button {
   gap: 12px;
 }
 
+.topbar {
+  align-items: flex-start;
+}
+
+.topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.app-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: var(--green-dark);
@@ -116,6 +137,7 @@ h2 {
 }
 
 .icon-button,
+.link-button,
 .text-button,
 .primary-button,
 .secondary-button,
@@ -132,6 +154,7 @@ h2 {
 }
 
 .icon-button:hover,
+.link-button:hover,
 .text-button:hover,
 .primary-button:hover,
 .secondary-button:hover,
@@ -142,6 +165,7 @@ h2 {
 }
 
 .icon-button:focus-visible,
+.link-button:focus-visible,
 .text-button:focus-visible,
 .primary-button:focus-visible,
 .secondary-button:focus-visible,
@@ -159,6 +183,30 @@ h2 {
   place-items: center;
   font-size: 1.35rem;
   font-weight: 800;
+}
+
+.link-button {
+  min-height: 48px;
+  border-radius: 999px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.link-button span[aria-hidden="true"] {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.link-button span:not([aria-hidden="true"]) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .score-strip {
@@ -492,6 +540,28 @@ dd {
 
   .game-board {
     gap: 12px;
+  }
+
+  .topbar {
+    flex-direction: column;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .app-links {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .link-button {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+    padding: 0 8px;
+    font-size: 0.82rem;
   }
 
   .score-strip {
