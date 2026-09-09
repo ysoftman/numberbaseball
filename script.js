@@ -42,9 +42,7 @@ const elements = {
   confirmModalOk: document.querySelector("#confirmModalOk"),
   confirmModalCancel: document.querySelector("#confirmModalCancel"),
   themeToggle: document.querySelector("#themeToggle"),
-  themeIcon: document.querySelector("#themeToggle .theme-icon"),
   muteToggle: document.querySelector("#muteToggle"),
-  muteIcon: document.querySelector("#muteToggle .mute-icon"),
   buildVersion: document.querySelector("#buildVersion"),
   buildTime: document.querySelector("#buildTime"),
   segments: [...document.querySelectorAll(".segment[data-length]")],
@@ -573,7 +571,6 @@ function applyTheme(theme) {
 function renderThemeToggle() {
   const effective = getEffectiveTheme();
   const isDark = effective === "dark";
-  elements.themeIcon.textContent = isDark ? "☀" : "☾";
   elements.themeToggle.setAttribute("aria-pressed", String(isDark));
   const label = isDark ? "라이트 모드로 전환" : "다크 모드로 전환";
   elements.themeToggle.setAttribute("aria-label", label);
@@ -592,7 +589,6 @@ function toggleTheme() {
 elements.themeToggle.addEventListener("click", toggleTheme);
 
 function renderMuteToggle() {
-  elements.muteIcon.textContent = isMuted ? "🔇" : "🔊";
   elements.muteToggle.setAttribute("aria-pressed", String(isMuted));
   const label = isMuted ? "효과음 켜기" : "효과음 끄기";
   elements.muteToggle.setAttribute("aria-label", label);
