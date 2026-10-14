@@ -261,7 +261,7 @@ function setStatus(message, tone = "normal") {
 }
 
 function updateCallout(label, value, tone = "normal") {
-  elements.resultCallout.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
+  elements.resultCallout.innerHTML = `<span class="callout-pill">${label}</span><strong class="callout-title">${value}</strong>`;
   elements.resultCallout.classList.toggle("is-win", tone === "win");
   elements.resultCallout.classList.toggle("is-lose", tone === "lose");
 }
@@ -272,19 +272,19 @@ function renderDigits() {
 
   slots.forEach((slot) => {
     const position = bases.indexOf(slot.dataset.base);
-    const text = slot.querySelector("text");
+    const text = slot.querySelector(".slot-text") || slot.querySelector("text");
 
     if (position === -1) {
       slot.classList.add("is-hidden-slot");
       slot.classList.remove("is-filled");
-      text.textContent = "";
+      if (text) text.textContent = "";
       return;
     }
 
     const digit = state.currentGuess[position] ?? "";
     slot.classList.remove("is-hidden-slot");
     slot.classList.toggle("is-filled", Boolean(digit));
-    text.textContent = digit;
+    if (text) text.textContent = digit;
   });
 }
 
@@ -421,16 +421,89 @@ function deleteDigit() {
   renderInput();
 }
 
+function fireConfetti() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const canvas = document.querySelector("#confettiCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const width = (canvas.width = window.innerWidth);
+  const height = (canvas.height = window.innerHeight);
+
+  const colors = [
+    "#22c55e",
+    "#16a34a",
+    "#f59e0b",
+    "#fbbf24",
+    "#ef4444",
+    "#38bdf8",
+    "#a855f7",
+    "#ffffff",
+  ];
+
+  const particles = Array.from({ length: 95 }, () => ({
+    x: width * 0.5 + (Math.random() - 0.5) * 120,
+    y: height * 0.38 + (Math.random() - 0.5) * 80,
+    vx: (Math.random() - 0.5) * 16,
+    vy: Math.random() * -14 - 4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    size: Math.random() * 8 + 5,
+    rotation: Math.random() * 360,
+    vRot: (Math.random() - 0.5) * 12,
+    gravity: 0.38,
+    drag: 0.985,
+    opacity: 1,
+  }));
+
+  const startTime = Date.now();
+  let animId = null;
+
+  function tick() {
+    const elapsed = Date.now() - startTime;
+    if (elapsed > 2600) {
+      ctx.clearRect(0, 0, width, height);
+      if (animId) cancelAnimationFrame(animId);
+      return;
+    }
+
+    ctx.clearRect(0, 0, width, height);
+
+    particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.vx *= p.drag;
+      p.vy *= p.drag;
+      p.rotation += p.vRot;
+      p.opacity = Math.max(0, 1 - (elapsed - 1400) / 1200);
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
+      ctx.restore();
+    });
+
+    animId = requestAnimationFrame(tick);
+  }
+
+  animId = requestAnimationFrame(tick);
+}
+
 function endGame(hasWon) {
   state.isGameOver = true;
 
   if (hasWon) {
     saveBestScore(state.guesses.length);
     setStatus(
-      `정답입니다. ${state.guesses.length}번 만에 성공했습니다.`,
+      `홈런! ${state.guesses.length}번 만에 정답을 맞혔습니다.`,
       "success",
     );
     updateCallout("홈런", `${state.guesses.length}번 만에 정답!`, "win");
+    fireConfetti();
   } else {
     setStatus("", "error");
     updateCallout("패배", `정답은 ${state.answer.join("")}`, "lose");
