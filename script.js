@@ -582,6 +582,7 @@ function openConfirmModal(message) {
       if (event.target === elements.confirmModal) cleanup(false);
     };
     const onKeyDown = (event) => {
+      event.stopPropagation();
       if (event.key === "Escape") {
         event.preventDefault();
         cleanup(false);
@@ -755,18 +756,24 @@ elements.segments.forEach((segment) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key >= "0" && event.key <= "9") {
+  if (event.ctrlKey || event.metaKey || event.altKey) {
+    return;
+  }
+
+  if (/^[0-9]$/.test(event.key)) {
     addDigit(event.key);
     return;
   }
 
-  if (event.key === "Backspace") {
+  // 마우스로 클릭해 포커스가 남은 버튼이 Enter/Backspace 로 눌리지 않도록 막는다.
+  if (event.key === "Backspace" || event.key === "Delete") {
     event.preventDefault();
     deleteDigit();
     return;
   }
 
   if (event.key === "Enter") {
+    event.preventDefault();
     submitGuess();
   }
 });

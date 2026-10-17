@@ -102,28 +102,14 @@
         </div>
 
         <section class="settings-panel">
-          <div class="settings-controls">
-            <div class="segment-pill-group" role="tablist" aria-label="자리수 선택">
+          <div class="settings-options" role="group" aria-label="게임 옵션">
+            <div class="segment-pill-group" role="group" aria-label="자리수 선택">
               <button class="segment is-active" type="button" data-length="3">
                 3자리
               </button>
               <button class="segment" type="button" data-length="4">4자리</button>
             </div>
-            <button
-              class="new-game-btn"
-              id="newGameButton"
-              type="button"
-              aria-label="새 게임"
-              title="새 게임"
-            >
-              <svg class="btn-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
-              </svg>
-              <span>새 게임</span>
-            </button>
-          </div>
 
-          <div class="settings-options">
             <label class="toggle-switch">
               <input id="allowZeroToggle" type="checkbox" checked />
               <span class="switch-track" aria-hidden="true">
@@ -153,6 +139,19 @@
               </label>
             </div>
           </div>
+
+          <button
+            class="new-game-btn"
+            id="newGameButton"
+            type="button"
+            aria-label="새 게임"
+            title="새 게임"
+          >
+            <svg class="btn-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+            </svg>
+            <span>새 게임</span>
+          </button>
         </section>
 
         <div class="field-panel">
