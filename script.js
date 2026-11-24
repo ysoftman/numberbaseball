@@ -353,6 +353,12 @@ function renderControls() {
   elements.submitButton.disabled = !canSubmit;
   elements.deleteButton.disabled = !canDelete;
   elements.revealButton.disabled = false;
+  // 게임이 끝나면 새 게임이 다음 행동이므로 주 버튼으로 올린다.
+  elements.newGameButton.classList.toggle("primary-button", state.isGameOver);
+  elements.newGameButton.classList.toggle(
+    "secondary-button",
+    !state.isGameOver,
+  );
 }
 
 function renderInput() {
@@ -379,6 +385,11 @@ function startGame(message = "서로 다른 숫자를 입력하세요.") {
   render();
 }
 
+function inputHint() {
+  const left = state.answerLength - state.currentGuess.length;
+  return left > 0 ? `${left}자리 더 입력하세요.` : "제출하기를 누르세요.";
+}
+
 function addDigit(digit) {
   if (state.isGameOver) {
     return;
@@ -400,7 +411,7 @@ function addDigit(digit) {
   }
 
   state.currentGuess.push(digit);
-  setStatus("입력 중입니다.");
+  setStatus(inputHint());
   playSound("key");
   renderInput();
 }
@@ -416,7 +427,7 @@ function deleteDigit() {
   }
 
   state.currentGuess.pop();
-  setStatus("마지막 숫자를 지웠습니다.");
+  setStatus(inputHint());
   playSound("delete");
   renderInput();
 }
@@ -438,7 +449,6 @@ function fireConfetti() {
     "#fbbf24",
     "#ef4444",
     "#38bdf8",
-    "#a855f7",
     "#ffffff",
   ];
 
@@ -505,7 +515,7 @@ function endGame(hasWon) {
     updateCallout("홈런", `${state.guesses.length}번 만에 정답!`, "win");
     fireConfetti();
   } else {
-    setStatus("", "error");
+    setStatus("새 게임으로 다시 도전하세요.", "error");
     updateCallout("패배", `정답은 ${state.answer.join("")}`, "lose");
   }
 
@@ -755,7 +765,16 @@ elements.segments.forEach((segment) => {
   });
 });
 
+let usingKeyboard = false;
+window.addEventListener("pointerdown", () => {
+  usingKeyboard = false;
+});
+
 window.addEventListener("keydown", (event) => {
+  if (event.key === "Tab") {
+    usingKeyboard = true;
+  }
+
   if (event.ctrlKey || event.metaKey || event.altKey) {
     return;
   }
@@ -773,6 +792,10 @@ window.addEventListener("keydown", (event) => {
   }
 
   if (event.key === "Enter") {
+    // Tab 으로 버튼에 온 키보드 사용자는 Enter 로 그 버튼을 누를 수 있어야 한다.
+    if (usingKeyboard && event.target.closest?.("button")) {
+      return;
+    }
     event.preventDefault();
     submitGuess();
   }
@@ -810,6 +833,9 @@ function renderBuildInfo() {
   elements.buildTime.dateTime = date.toISOString();
 }
 
+document
+  .querySelector("#historyEmpty")
+  .append(elements.rulesTooltip.querySelector(".rules-list").cloneNode(true));
 renderThemeToggle();
 renderMuteToggle();
 renderBuildInfo();

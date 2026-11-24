@@ -22,8 +22,6 @@
   --green-glow: rgba(22, 163, 74, 0.28);
   
   --on-accent: #ffffff;
-  --field-grass: #186f41;
-  --field-grass-dark: #0e4425;
   
   --yellow: #f59e0b;
   --yellow-dark: #b45309;
@@ -37,11 +35,9 @@
   --shadow-sm: 0 1px 3px rgba(18, 38, 26, 0.05), 0 1px 2px rgba(18, 38, 26, 0.08);
   --shadow: 0 10px 25px -4px rgba(18, 38, 26, 0.08), 0 6px 12px -2px rgba(18, 38, 26, 0.04);
   --shadow-lg: 0 20px 35px -5px rgba(18, 38, 26, 0.12), 0 10px 18px -3px rgba(18, 38, 26, 0.06);
-  --shadow-key: 0 3px 0 #c2d2c7, 0 4px 8px rgba(18, 38, 26, 0.06);
-  --shadow-key-active: 0 1px 0 #c2d2c7;
-  
+
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+  --font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
@@ -69,8 +65,6 @@
   --green-glow: rgba(34, 197, 94, 0.35);
   
   --on-accent: #0c150f;
-  --field-grass: #135532;
-  --field-grass-dark: #082d19;
   
   --yellow: #fbbf24;
   --yellow-dark: #fde68a;
@@ -84,8 +78,6 @@
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.35);
   --shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 24px 44px -6px rgba(0, 0, 0, 0.7);
-  --shadow-key: 0 3px 0 #0e1711, 0 4px 8px rgba(0, 0, 0, 0.4);
-  --shadow-key-active: 0 1px 0 #0e1711;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -110,8 +102,6 @@
     --green-glow: rgba(34, 197, 94, 0.35);
     
     --on-accent: #0c150f;
-    --field-grass: #135532;
-    --field-grass-dark: #082d19;
     
     --yellow: #fbbf24;
     --yellow-dark: #fde68a;
@@ -125,8 +115,6 @@
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.35);
     --shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
     --shadow-lg: 0 24px 44px -6px rgba(0, 0, 0, 0.7);
-    --shadow-key: 0 3px 0 #0e1711, 0 4px 8px rgba(0, 0, 0, 0.4);
-    --shadow-key-active: 0 1px 0 #0e1711;
   }
 }
 
@@ -158,6 +146,11 @@ button {
   background: none;
 }
 
+button:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 2px;
+}
+
 /* Main Layout Shell */
 .app-shell {
   width: min(1180px, calc(100vw - 32px));
@@ -184,7 +177,7 @@ button {
   min-height: calc(100dvh - 64px);
   padding: 30px;
   display: grid;
-  grid-template-rows: auto auto minmax(230px, 1fr) auto auto auto;
+  grid-template-rows: auto auto minmax(200px, 1fr) auto auto auto;
   gap: 20px;
   backdrop-filter: blur(8px);
 }
@@ -254,8 +247,8 @@ h1 {
 
 /* Icon Buttons (Theme & Mute) */
 .icon-button {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
   border: 1px solid var(--line);
   background: var(--surface-strong);
@@ -276,11 +269,6 @@ h1 {
 
 .icon-button:active {
   transform: translateY(0) scale(0.96);
-}
-
-.icon-button:focus-visible {
-  outline: 3px solid var(--green);
-  outline-offset: 2px;
 }
 
 .icon-button svg {
@@ -347,45 +335,6 @@ h1 {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* New Game Button */
-.new-game-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 48px;
-  padding: 0 20px;
-  border-radius: var(--radius-md);
-  background: var(--green);
-  color: var(--on-accent);
-  font-weight: 700;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 14px var(--green-glow);
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.new-game-btn:hover {
-  background: var(--green-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px var(--green-glow);
-}
-
-.new-game-btn:hover .btn-icon {
-  transform: rotate(180deg);
-}
-
-.new-game-btn:active {
-  transform: translateY(0) scale(0.97);
-}
-
-.new-game-btn:focus-visible {
-  outline: 3px solid var(--green);
-  outline-offset: 2px;
-}
-
-.new-game-btn .btn-icon {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
 /* Settings Options (자리수 & 0포함 토글 & 기회 선택) */
 .settings-options {
   display: flex;
@@ -393,7 +342,7 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 12px 18px;
-  padding: 10px 14px;
+  padding: 6px 14px;
   background: var(--surface-strong);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -520,27 +469,44 @@ h1 {
 /* Baseball Field Panel */
 .field-panel {
   position: relative;
-  min-height: 240px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--field-grass-dark);
+  background: radial-gradient(70% 70% at 50% 58%, #1f7a47 0%, #145e35 55%, #093019 100%);
   box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(18, 50, 30, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.field-art {
-  width: 100%;
-  height: 100%;
-  min-height: 240px;
-  display: block;
+/* The field fills whatever height the board leaves it, so the keypad stays on screen */
+.field-stage {
+  position: relative;
+  flex: 1;
 }
 
-/* Scoreboard Strip (Floating Widget Top-Left) */
-.score-strip {
+.field-art,
+.field-slots {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scoreboard (left) and umpire callout (right), floating over the field */
+.field-hud {
   position: absolute;
   top: 12px;
   left: 12px;
+  right: 12px;
   z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.score-strip {
   display: inline-flex;
   gap: 16px;
   padding: 8px 16px;
@@ -584,13 +550,8 @@ h1 {
   letter-spacing: -0.01em;
 }
 
-/* Result Callout (Floating Widget Top-Right) */
 .result-callout {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 3;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
   padding: 8px 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 999px;
@@ -653,10 +614,6 @@ h1 {
 
 /* Field Digit Slots (Overlay on Bases) - Hidden when empty, shown when filled */
 .field-slots {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   pointer-events: none;
 }
 
@@ -705,10 +662,6 @@ h1 {
   0% { transform: scale(0.8); }
   60% { transform: scale(1.12); }
   100% { transform: scale(1); }
-}
-
-.field-slots .digit-slot.is-hidden-slot {
-  display: none;
 }
 
 /* Status Text Bar */
@@ -762,7 +715,6 @@ h1 {
   font-size: 1.45rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  box-shadow: var(--shadow-key);
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   display: grid;
   place-items: center;
@@ -772,18 +724,10 @@ h1 {
   transform: translateY(-2px);
   border-color: var(--green);
   color: var(--green);
-  box-shadow: 0 5px 0 #b3c5b8, 0 8px 14px rgba(22, 163, 74, 0.15);
-}
-
-:root[data-theme="dark"] .digit-key:hover:not(:disabled) {
-  border-color: var(--green);
-  color: var(--green);
-  box-shadow: 0 4px 0 #08100b, 0 8px 16px rgba(34, 197, 94, 0.25);
 }
 
 .digit-key:active:not(:disabled) {
   transform: translateY(2px);
-  box-shadow: var(--shadow-key-active);
 }
 
 .digit-key:disabled {
@@ -792,7 +736,6 @@ h1 {
   transform: none;
   background: var(--surface);
   border-color: var(--line);
-  box-shadow: none;
   text-decoration: line-through;
 }
 
@@ -826,8 +769,8 @@ h1 {
 
 .secondary-button:hover:not(:disabled) {
   background: var(--surface-hover);
-  border-color: var(--red);
-  color: var(--red);
+  border-color: var(--green);
+  color: var(--green);
   transform: translateY(-2px);
 }
 
@@ -863,6 +806,22 @@ h1 {
 
 .primary-button:disabled {
   background: var(--muted);
+}
+
+/* New Game Button: secondary while playing, primary once the game is over (script.js) */
+.new-game-btn {
+  height: auto;
+  min-height: 56px;
+  padding: 0 20px;
+  font-size: 0.95rem;
+}
+
+.new-game-btn:hover .btn-icon {
+  transform: rotate(180deg);
+}
+
+.new-game-btn .btn-icon {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Side Panel & History */
@@ -922,7 +881,6 @@ h2 {
 }
 
 .history-list {
-  grid-row: 2;
   min-height: 0;
   margin: 0;
   padding: 0 2px;
@@ -954,12 +912,6 @@ h2 {
   align-items: center;
   box-shadow: var(--shadow-sm);
   animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-
-.history-item:hover {
-  border-color: var(--line-strong);
-  transform: translateX(2px);
 }
 
 @keyframes slideDown {
@@ -1031,23 +983,30 @@ h2 {
   color: #ffffff;
 }
 
-.history-list:empty::before {
-  content: "⚾ 아직 제출한 숫자가 없습니다.\n숫자를 입력하고 판정을 받아보세요!";
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
+/* Empty history: show the judging rules instead of a blank box */
+.history-list:empty,
+.history-list:not(:empty) + .history-empty {
+  display: none;
+}
+
+.history-empty {
   min-height: 180px;
   padding: 24px;
-  text-align: center;
-  white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius-md);
+}
+
+.history-empty p {
+  margin: 0;
   color: var(--muted);
   font-weight: 600;
   font-size: 0.95rem;
-  line-height: 1.6;
-  border: 2px dashed var(--line);
-  border-radius: var(--radius-md);
-  margin-top: 8px;
+  text-align: center;
 }
 
 /* Rules Tooltip */
@@ -1088,33 +1047,34 @@ h2 {
   transform: rotate(45deg);
 }
 
-.rules-tooltip dl {
+.rules-list {
   margin: 0;
   display: grid;
   gap: 12px;
 }
 
-.rules-tooltip dl div {
+.rules-list div {
   display: grid;
   grid-template-columns: 60px 1fr;
   gap: 10px;
   align-items: baseline;
 }
 
-.rules-tooltip dt {
+.rules-list dt {
   font-size: 0.88rem;
   font-weight: 800;
 }
 
-.rules-tooltip dd {
+.rules-list dd {
+  margin: 0;
   font-size: 0.85rem;
   color: var(--muted);
   white-space: nowrap;
 }
 
 .rule-strike { color: var(--green); }
-.rule-ball { color: var(--yellow); }
-.rule-out { color: var(--red); }
+.rule-ball { color: var(--yellow-dark); }
+.rule-out { color: var(--red-hover); }
 
 /* Build Meta */
 .build-meta {
@@ -1227,6 +1187,12 @@ h2 {
   .history-panel {
     max-height: 400px;
   }
+
+  .field-stage {
+    flex: none;
+    aspect-ratio: 320 / 228;
+    max-height: 45dvh;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1250,11 +1216,21 @@ h2 {
     padding-bottom: 12px;
   }
 
+  /* The scoreboard and callout no longer fit side by side over the field */
+  .field-hud {
+    position: static;
+    flex-wrap: wrap;
+    padding: 8px 8px 0;
+  }
+
+  /* Keep the keypad and submit on the first screen of a phone */
+  .field-stage {
+    max-height: 25dvh;
+  }
+
   .score-strip {
     gap: 10px;
     padding: 6px 10px;
-    top: 8px;
-    left: 8px;
   }
 
   .score-item + .score-item {
@@ -1270,13 +1246,12 @@ h2 {
   }
 
   .result-callout {
-    top: 8px;
-    right: 8px;
     padding: 6px 12px;
   }
 
+  /* The title alone carries the verdict, so the HUD fits on one line */
   .callout-pill {
-    font-size: 0.65rem;
+    display: none;
   }
 
   .callout-title {
@@ -1285,6 +1260,18 @@ h2 {
 
   .settings-panel {
     grid-template-columns: 1fr;
+  }
+
+  .segment,
+  .text-button,
+  .toggle-switch,
+  .radio-chip span {
+    min-height: 44px;
+  }
+
+  .radio-chip span {
+    display: inline-flex;
+    align-items: center;
   }
 
   .new-game-btn {
@@ -1340,7 +1327,6 @@ h2 {
   .text-button:hover,
   .primary-button:hover,
   .secondary-button:hover,
-  .new-game-btn:hover,
   .segment:hover,
   .digit-key:hover {
     transform: none;
